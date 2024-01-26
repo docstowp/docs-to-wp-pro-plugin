@@ -15,6 +15,7 @@ This tutorial teaches you how to install the Docs to WP Pro add on in your WordP
 ![Upload plugin](https://imgur.com/fxMEMxs.png)
 
 5. Select the downloaded zip file, install and activate it.
+![Install plugin](https://imgur.com/Ycym7D6.png)
 6. You're done.
 
 Now when you push the content from Google Docs, the Focus Keyword, Meta Description and Meta title will be updated accordingly. 
