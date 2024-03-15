@@ -59,7 +59,7 @@ function docs_to_wp_pro_notice()
 			}
 		</style>
 		<div class="updated notice is-dismissible">
-			<p><?php esc_html_e('Thank you for installing the Docs to WP Pro plugin.', 'docs-to-wp-pro'); ?></p>
+		<p><?php printf( esc_html__( 'Thank you for installing the %s WordPress plugin.', 'docs-to-wp-pro' ), '<strong>Docs to WP Pro</strong>' ); ?></p>
 			<p><?php esc_html_e('Complete the installation by installing the Google Docs Editor add-on and start enjoying one-click Google Docs to WordPress publishing.', 'docs-to-wp-pro'); ?></p>
 			<div>
 				<a href="<?php echo esc_url('https://workspace.google.com/marketplace/app/docs_to_wp_pro/346830534164?pann=b&utm_source=wordpress&utm_medium=plugin-activation-notice'); ?>" target="_blank" aria-label="<?php esc_attr_e('Get it from the Google Workspace Marketplace', 'docs-to-wp-pro'); ?>">
