@@ -1,17 +1,6 @@
 <?php
 
 /**
- * The plugin bootstrap file
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
- *
- * @link              https://twitter.com/vikramaruchamy/
- * @since             1.0.0
- * @package           Docs_To_Wp_Pro
- *
  * @wordpress-plugin
  * Plugin Name:       Docs to WP Pro
  * Plugin URI:        https://www.docstowp.pro
@@ -37,26 +26,96 @@ if (!defined('WPINC')) {
  */
 define('DOCS_TO_WP_PRO_VERSION', '1.0.0');
 
+function docs_to_wp_pro_create_home_page() {
+	$icon = plugin_dir_url( __FILE__ ) . 'assets/images/icon-128x128.png';
+	add_menu_page('Docs to WP Pro', 'Docs to Wp Pro', 'manage_options', 'docs-to-wp-pro', 'docs_to_wp_pro_home_page_content', 'dashicons-info-outline', 76);
+  }
+
+add_action('admin_menu', 'docs_to_wp_pro_create_home_page');
+
+function docs_to_wp_pro_home_page_content() {
+// The content of the page goes here:
+echo '<h1>Docs to WP Pro Plugin</h1>';
+echo '<p>Docs to WP Pro is a plugin that allows you to publish content from Google Docs to WordPress.</p>';
+echo '<p>This plugin allows the Docs to WP Pro Google Docs editor add on to interact with your WordPress site and update the RankMath and the Yoast SEO meta data.</p>';
+echo '<p>To use this plugin, please install the Docs to WP Pro add on from the Google Workspace Marketplace. Then you can publish to WordPress to Google Docs in a single click.</p>';
+echo '<div><a href="https://workspace.google.com/marketplace/app/docs_to_wp_pro/346830534164?pann=b&utm_source=wordpress&utm_medium=plugin-homepage" target="_blank" aria-label="Get it from the Google Workspace Marketplace">
+<img alt="Google Workspace Marketplace badge" alt-text="Get it from the Google Workspace Marketplace" src="https://workspace.google.com/static/img/marketplace/en/gwmBadge.svg?" style="height: 68px">
+</a></div>';
+}
+
+add_filter( 'plugin_row_meta', 'docs_to_wp_pro_userful_links', 10, 4 );
+
+function docs_to_wp_pro_userful_links( $links_array, $plugin_file_name, $plugin_data, $status ) {
+    // Check if the current plugin file matches your plugin
+    if (strpos($plugin_file_name, basename(__FILE__)) !== false) {
+        // Add FAQ link
+        $install_editor_add_on_link = '<a href="https://workspace.google.com/marketplace/app/docs_to_wp_pro/346830534164?utm_source=wordpress&utm_medium=plugin-description" target="_blank">Install Docs to WP Pro Google Docs Editor Addon</a>';
+        $links_array[] = $install_editor_add_on_link;
+
+        // Add Support link
+        $support_link = '<a href="https://www.docstowp.pro/contact-us?utm_source=wordpress&utm_medium=plugin-description" target="_blank">Support</a>';
+        $links_array[] = $support_link;
+    }
+
+    return $links_array;
+}
 
 function register_rest_meta_endpoints()
 {
 	register_rest_route('/docs-to-wp-pro/v1', '/check', array(
 		'methods' => 'GET',
-		'callback' => 'return_info'
+		'callback' => 'return_info',
+        'permission_callback' => 'docstowppro_check_permissions_callback'
 	));
 
 	register_rest_route('/docs-to-wp-pro/v1', '/check-plugin-installation', array(
 		'methods' => 'POST',
-		'callback' => 'docstowppro_check_plugin_installation'
+		'callback' => 'docstowppro_check_plugin_installation',
+        'permission_callback' => 'docstowppro_check_permissions_callback'
 	));
 
 	register_rest_route('/docs-to-wp-pro/v1', '/update-seo-meta', array(
 		'methods' => 'POST',
-		'callback' => 'docstowppro_plugin_update_seo_meta'
+		'callback' => 'docstowppro_plugin_update_seo_meta',
+        'permission_callback' => 'docstowppro_check_permissions_callback'
 	));
 }
 
 add_action('rest_api_init', 'register_rest_meta_endpoints');
+
+function docstowppro_check_permissions_callback($request) {
+    // Retrieve the Authorization header from the request
+    $auth_header = $request->get_header('Authorization');
+
+    // Check if the Authorization header is present and starts with 'Basic'
+    if ($auth_header && strpos($auth_header, 'Basic') === 0) {
+        // Decode the username and password from the Authorization header
+        $auth_data = explode(' ', $auth_header);
+        $auth_data = base64_decode($auth_data[1]);
+        list($username, $password) = explode(':', $auth_data);
+
+        // Authenticate using the application password
+        $user = wp_authenticate_application_password(null, $username, $password);
+
+        if (is_wp_error($user)) {
+            // Authentication failed
+            return new WP_Error('authentication_failed', $user->get_error_message(), array('status' => 401));
+        } else {
+            // Check if the user has 'edit_posts' capability
+            if (user_can($user, 'edit_posts')) {
+                // User has permission to edit posts
+                return true;
+            } else {
+                // User does not have permission to edit posts
+                return new WP_Error('insufficient_permissions', __('You do not have permission to edit posts.', 'docs-to-wp-pro'), array('status' => 403));
+            }
+        }
+    } else {
+        // If Authorization header is missing or not in the correct format, return an error response
+        return new WP_Error('authorization_header_missing', 'Authorization header is missing or in incorrect format.', array('status' => 401));
+    }
+}
 
 function return_info()
 {

@@ -19,3 +19,6 @@ This tutorial teaches you how to install the Docs to WP Pro add on in your WordP
 6. You're done.
 
 Now when you push the content from Google Docs, the Focus Keyword, Meta Description and Meta title will be updated accordingly. 
+
+cd /path/to/directory && zip -r docs-to-wp-pro.zip * -x "*/.*"
+
