@@ -4,7 +4,7 @@ This tutorial teaches you how to install the Docs to WP Pro add on in your WordP
 
 **Important:** This is ONLY necessary if you want to update the RankMath or the Yoast plugin Meta data such as Focus keyword, Meta Description and Meta title. 
 
-1. Download the [Docs to WP Pro](https://github.com/docstowp/docs-to-wp-pro-plugin/raw/main/Docs%20to%20WP%20Pro.zip) WordPress plugin.
+1. Download the [Docs to WP Pro](https://github.com/docstowp/docs-to-wp-pro-plugin/blob/v1.0.0/Docs%20to%20WP%20Pro.zip) WordPress plugin.
 2. Go to Plugins page of your WordPress site
 3. Click *Add new* option as shown in the following image
   
