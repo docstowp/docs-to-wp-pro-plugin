@@ -1,5 +1,5 @@
-=== Docs to WP Pro – Convert Google Docs to WordPress in a single click, with Intelligent internal links and  SEO optimizations ===
-Contributors: Vikram Aruchamy
+=== Docs to WP Pro – Convert Google Docs to WP in a single click, with SEO optimizations ===
+Contributors: vikramdocstowp
 Tags:  google docs, seo, internal links, automatic linking, google drive
 Requires at least: 4.5
 Requires PHP: 5.6
@@ -8,7 +8,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Plugin to interact with the "Docs to WP Pro" Google Docs Editor add-on that allows you to publish SEO-optimized posts with smart internal links from Google Docs.
+Plugin to interact with the "Docs to WP Pro" Google Docs Editor add-on that allows you to publish SEO-optimized posts from Google Docs.
 
 == Description ==
 

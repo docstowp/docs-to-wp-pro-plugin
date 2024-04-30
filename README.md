@@ -22,3 +22,4 @@ Now when you push the content from Google Docs, the Focus Keyword, Meta Descript
 
 cd /path/to/directory && zip -r docs-to-wp-pro.zip * -x "*/.*"
 
+cd github/docs-to-wp-pro-wordpress-plugin/plugin_zip && zip -r docs-to-wp-pro.zip * -x "*/.*"

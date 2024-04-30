@@ -4,7 +4,7 @@
  * @wordpress-plugin
  * Plugin Name:       Docs to WP Pro
  * Plugin URI:        https://www.docstowp.pro
- * Description:       Plugin to interact with the "Docs to WP Pro" Google Docs Editor add-on that allows you to SEO-optimize your posts with smart internal links and helps you push the content from Google Docs to WordPress.
+ * Description:       Plugin to interact with the "Docs to WP Pro" Google Docs Editor add-on that allows you to SEO-optimize your posts and push the content from Google Docs to WordPress.
  * Version:           1.0.0
  * Author:            Vikram Aruchamy
  * Author URI:        https://twitter.com/vikramaruchamy/
@@ -24,34 +24,35 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('DOCS_TO_WP_PRO_VERSION', '1.0.0');
+define('DOCSTOWPPRO_VERSION', '1.0.0');
 
 /* Register activation hook. */
-register_activation_hook(__FILE__, 'docs_to_wp_pro_activation_hook');
+register_activation_hook(__FILE__, 'docstowppro_activation_hook');
 
 /**
  * Runs only when the plugin is activated.
  * @since 1.0.2
  */
-function docs_to_wp_pro_activation_hook()
+function docstowppro_activation_hook()
 {
 
 	/* Create transient data */
-	set_transient('docs-to-wp-pro-activation-notice', true, 5);
+	set_transient('docstowppro-activation-notice', true, 5);
 }
 
 /* Add admin notice */
-add_action('admin_notices', 'docs_to_wp_pro_notice');
+add_action('admin_notices', 'docstowppro_notice');
 
 
 /**
  * Admin Notice on Activation.
  * @since 1.0.0
  */
-function docs_to_wp_pro_notice()
+function docstowppro_notice()
 {
+    $badge = plugin_dir_url(__FILE__) . 'assets/images/gwmBadge.svg';
 	/* Check transient, if available display notice */
-	if (get_transient('docs-to-wp-pro-activation-notice')) {
+	if (get_transient('docstowppro-activation-notice')) {
 ?>
 		<style>
 			div#message.updated {
@@ -59,24 +60,26 @@ function docs_to_wp_pro_notice()
 			}
 		</style>
 		<div class="updated notice is-dismissible">
-			<p><?php esc_html_e('Thank you for installing the Docs to WP Pro plugin.', 'docs-to-wp-pro'); ?></p>
-			<p><?php esc_html_e('Complete the installation by installing the Google Docs Editor add-on and start enjoying one-click Google Docs to WordPress publishing.', 'docs-to-wp-pro'); ?></p>
+         <!-- TO display the thank you message after user installs the plugin -->    
+		<p><?php printf( esc_html_e( 'Thank you for installing the Docs to WP Pro WordPress plugin.', 'docs-to-wp-pro' ), '<strong>Docs to WP Pro</strong>' ); ?></p>
+			<p><?php esc_html_e('If you have not installed the Google Docs Editor add-on already, please install it from the Workspace Marketplace and start enjoying one-click Google Docs to WordPress publishing.', 'docs-to-wp-pro'); ?></p>
 			<div>
 				<a href="<?php echo esc_url('https://workspace.google.com/marketplace/app/docs_to_wp_pro/346830534164?pann=b&utm_source=wordpress&utm_medium=plugin-activation-notice'); ?>" target="_blank" aria-label="<?php esc_attr_e('Get it from the Google Workspace Marketplace', 'docs-to-wp-pro'); ?>">
-					<img alt="<?php esc_attr_e('Google Workspace Marketplace badge', 'docs-to-wp-pro'); ?>" alt-text="<?php esc_attr_e('Get it from the Google Workspace Marketplace', 'docs-to-wp-pro'); ?>" src="https://workspace.google.com/static/img/marketplace/en/gwmBadge.svg?" style="height: 68px">
+                <img alt="Google Workspace Marketplace badge" style="height: 68px" src="<?php echo esc_url($badge); ?>">
+
 				</a>
 			</div>
 		</div>
 <?php
 		/* Delete transient, only display this notice once. */
-		delete_transient('docs-to-wp-pro-activation-notice');
+		delete_transient('docstowppro-activation-notice');
 	}
 }
 
 
 
 // Add a custom page for instructions
-function docs_to_wp_pro_instructions_page_content()
+function docstowppro_instructions_page_content()
 {
 	// The content of the instructions page goes here:
 	echo '<h1>Docs to WP Pro Instructions</h1>';
@@ -87,31 +90,31 @@ function docs_to_wp_pro_instructions_page_content()
 	echo '</ul>';
 }
 
-function docs_to_wp_pro_create_home_page()
+function docstowppro_create_home_page()
 {
-	//remove_submenu_page('Docs to WP Pro','docs-to-wp-pro'); 
+	
 	$icon = plugin_dir_url(__FILE__) . 'assets/images/icon-20x20.png';
-	add_menu_page('Docs to WP Pro', 'Docs to WP Pro', 'manage_options', 'docs-to-wp-pro', 'docs_to_wp_pro_home_page_content', $icon, 76);
-	//add_submenu_page('docs-to-wp-pro', 'Docs to WP Instructions', 'Instructions', 'manage_options', 'docs-to-wp-pro-instructions', 'docs_to_wp_pro_instructions_page_content');
+	add_menu_page('Docs to WP Pro', 'Docs to WP Pro', 'manage_options', 'docs-to-wp-pro', 'docstowppro_home_page_content', $icon, 76);
+	
 }
 
-add_action('admin_menu', 'docs_to_wp_pro_create_home_page');
+add_action('admin_menu', 'docstowppro_create_home_page');
 
-function docs_to_wp_pro_home_page_content()
+function docstowppro_home_page_content()
 {
+    $badge = plugin_dir_url(__FILE__) . 'assets/images/gwmBadge.svg';
 	// The content of the page goes here:
 	echo '<h1>Docs to WP Pro Plugin</h1>';
 	echo '<p>Docs to WP Pro is a plugin that allows you to publish content from Google Docs to WordPress.</p>';
 	echo '<p>This plugin allows the Docs to WP Pro Google Docs editor add on to interact with your WordPress site and update the RankMath and the Yoast SEO meta data.</p>';
 	echo '<p>To use this plugin, please install the Docs to WP Pro add on from the Google Workspace Marketplace. Then you can publish to WordPress to Google Docs in a single click.</p>';
 	echo '<div><a href="https://workspace.google.com/marketplace/app/docs_to_wp_pro/346830534164?pann=b&utm_source=wordpress&utm_medium=plugin-home-page" target="_blank" aria-label="Get it from the Google Workspace Marketplace">
-<img alt="Google Workspace Marketplace badge" alt-text="Get it from the Google Workspace Marketplace" src="https://workspace.google.com/static/img/marketplace/en/gwmBadge.svg?" style="height: 68px">
-</a></div>';
+    <img alt="Google Workspace Marketplace badge" style="height: 68px" src="' . esc_url($badge) . '"></a></div>';
 }
 
-add_filter('plugin_row_meta', 'docs_to_wp_pro_userful_links', 10, 4);
+add_filter('plugin_row_meta', 'docstowppro_useful_links', 10, 4);
 
-function docs_to_wp_pro_userful_links($links_array, $plugin_file_name, $plugin_data, $status)
+function docstowppro_useful_links($links_array, $plugin_file_name, $plugin_data, $status)
 {
 	// Check if the current plugin file matches your plugin
 	if (strpos($plugin_file_name, basename(__FILE__)) !== false) {
@@ -127,11 +130,11 @@ function docs_to_wp_pro_userful_links($links_array, $plugin_file_name, $plugin_d
 	return $links_array;
 }
 
-function register_rest_meta_endpoints()
+function docstowppro_register_rest_meta_endpoints()
 {
 	register_rest_route('/docs-to-wp-pro/v1', '/check', array(
 		'methods' => 'GET',
-		'callback' => 'return_info',
+		'callback' => 'docstowppro_return_info',
 		'permission_callback' => 'docstowppro_check_permissions_callback'
 	));
 
@@ -148,7 +151,7 @@ function register_rest_meta_endpoints()
 	));
 }
 
-add_action('rest_api_init', 'register_rest_meta_endpoints');
+add_action('rest_api_init', 'docstowppro_register_rest_meta_endpoints');
 
 function docstowppro_check_permissions_callback($request)
 {
@@ -184,7 +187,7 @@ function docstowppro_check_permissions_callback($request)
 	}
 }
 
-function return_info()
+function docstowppro_return_info()
 {
 	return array(
 		'message' => 'This message shows that the Docs to WP Pro plugin was successfully installed. You can now update the Meta descriptions from the Docs to WP Pro Add on.',
